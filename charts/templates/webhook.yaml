@@ -1,0 +1,75 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingWebhookConfiguration
+metadata:
+  name: {{ .Chart.Name }}-validating-webhook
+webhooks:
+  - admissionReviewVersions:
+      - v1
+    clientConfig:
+      caBundle: "{{ .Values.webhook.tls.certificate }}"
+      service:
+        name: {{ .Chart.Name }}
+        namespace: {{ .Release.Namespace }}
+        port: 443
+        path: /validate
+    failurePolicy: Fail
+    matchPolicy: Exact
+    name: {{ .Chart.Name }}-validator.example.com
+    rules:
+      - apiGroups:
+          - ""
+        apiVersions:
+          - v1
+        operations:
+          - '*'
+        resources:
+          - pods
+        scope: '*'
+    objectSelector:
+      matchExpressions:
+        - key: app
+          operator: NotIn
+          values:
+            - {{ .Chart.Name }}
+    namespaceSelector:
+      {{- toYaml .Values.webhook.namespaceSelector | nindent 6 }}
+    sideEffects: None
+    timeoutSeconds: 3
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingWebhookConfiguration
+metadata:
+  name: {{ .Chart.Name }}-mutating-webhook
+webhooks:
+  - admissionReviewVersions:
+      - v1
+    clientConfig:
+      caBundle: "{{ .Values.webhook.tls.certificate }}"
+      service:
+        name: {{ .Chart.Name }}
+        namespace: {{ .Release.Namespace }}
+        port: 443
+        path: /mutate
+    failurePolicy: Fail
+    matchPolicy: Exact
+    name: {{ .Chart.Name }}-mutator.example.com
+    rules:
+      - apiGroups:
+          - ""
+        apiVersions:
+          - v1
+        operations:
+          - CREATE
+        resources:
+          - pods
+        scope: '*'
+    objectSelector:
+      matchExpressions:
+        - key: app
+          operator: NotIn
+          values:
+            - {{ .Chart.Name }}
+    namespaceSelector:
+      {{- toYaml .Values.webhook.namespaceSelector | nindent 6 }}
+    sideEffects: None
+    timeoutSeconds: 3
