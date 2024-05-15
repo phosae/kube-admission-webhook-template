@@ -5,8 +5,8 @@ toolchain go1.22.2
 
 require (
 	gomodules.xyz/jsonpatch/v2 v2.4.0
-	k8s.io/api v0.29.4
-	k8s.io/apimachinery v0.30.0
+	k8s.io/api v0.30.1
+	k8s.io/apimachinery v0.30.1
 )
 
 require (
