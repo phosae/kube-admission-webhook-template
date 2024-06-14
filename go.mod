@@ -1,12 +1,12 @@
 module github.com/phosae/kube-admission-webhook-template
 
 go 1.22
-toolchain go1.22.2
+toolchain go1.22.3
 
 require (
 	gomodules.xyz/jsonpatch/v2 v2.4.0
-	k8s.io/api v0.30.1
-	k8s.io/apimachinery v0.30.1
+	k8s.io/api v0.30.2
+	k8s.io/apimachinery v0.30.2
 )
 
 require (
